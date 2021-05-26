@@ -37,6 +37,7 @@ void Board::printBoard()
             }
             if(board[x][y] != nullptr)
             {
+                board[x][y]->setTileColour(board[x][y]->getColour());
                 std::cout << "|" << board[x][y]->getTileColour() << board[x][y]->getColour() << board[x][y]->getShape() << TWHITE;
             }
         }

@@ -23,28 +23,28 @@ void Tile::setShape(Shape shape){
     this->shape = shape;
 }
 
-void Tile::setTileColour()
+void Tile::setTileColour(char c)
 {
     tileColour = TRED;
-    if(colour == 'R')
+    if(c == RED)
     {
-        tileColour == TRED;
+        tileColour = TRED;
     }
-    if(colour == 'O')
+    if(c == ORANGE)
     {
-        tileColour == TORANGE;
+        tileColour = TORANGE;
     }
-    if(colour == 'Y')
+    if(c == YELLOW)
     {
-        tileColour == TYELLOW;
+        tileColour = TYELLOW;
     }
-    if(colour == 'B')
+    if(c == BLUE)
     {
-        tileColour == TBLUE;
+        tileColour = TBLUE;
     }
-    if(colour == 'P')
+    if(c == PURPLE)
     {
-        tileColour == TPURPLE;
+        tileColour = TPURPLE;
     }
 
 }

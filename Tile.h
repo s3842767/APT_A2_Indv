@@ -20,7 +20,7 @@ public:
    int getShape();
    void setShape(Shape shape);
 
-   void setTileColour();
+   void setTileColour(char c);
    std::string getTileColour();
 
 private:
