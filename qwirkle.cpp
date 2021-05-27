@@ -138,10 +138,10 @@ void startGame(GameEngine* gameEngine)
 {
    int choice = CHOICE_INVALID;
    std::string command = "";
+   printState(gameEngine);
 
    while(choice != CHOICE_QUIT && choice != GAME_END)
    {
-      printState(gameEngine);
       do
       {
          command = getInput();
@@ -164,6 +164,17 @@ void startGame(GameEngine* gameEngine)
          }
          if(gameEngine->isGameEnd())
             choice = GAME_END;
+         if(choice == CHOICE_PLACE)
+         {
+            if(gameEngine->getCurrentPlayerInt() == 0)
+            {
+               gameEngine->setCurrentPlayerInt(1);
+            }
+            if(gameEngine->getCurrentPlayerInt() == 1)
+            {
+               gameEngine->setCurrentPlayerInt(0);
+            }
+         }
       }
       while(choice == CHOICE_INVALID || choice == CHOICE_PLACE);
       
@@ -198,7 +209,7 @@ void printState(GameEngine* gameEngine)
    std::cout << std::endl;
 
    std::cout << "Your hand is" << std::endl;
-   std::cout << gameEngine->getCurrentPlayer()->printTilesOnHand() << std:: endl;
+   std::cout <<  gameEngine->getCurrentPlayer()->printTilesOnHand() << std:: endl;
    std::cout << std::endl;
 }
 
@@ -269,10 +280,9 @@ int parseCommand(GameEngine* gameEngine, std::string command)
       if(gameEngine->getCurrentPlayer()->checkTileOnHand(tile))
          {
             Tile* repTile = gameEngine->getCurrentPlayer()->getTile(tile);
-            gameEngine->getCurrentPlayer()->getHand()->remove(gameEngine->getCurrentPlayer()->getHand()->getTileIndex(repTile));
             gameEngine->replaceTileOnHand();
-            returnVal = CHOICE_REPLACE;
-            
+            delete repTile;
+            returnVal = CHOICE_PLACE;
          }
    }
    else if(word == ACTION_QUIT || std::cin.eof())

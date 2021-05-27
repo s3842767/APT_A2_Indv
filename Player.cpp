@@ -95,7 +95,8 @@ std::string Player::printTilesOnHand(){
     std::string tilesOnHand = "";
     for (unsigned int index = 0; index < hand->getSize(); index++){
         if (hand->get(index)!= nullptr){
-            tilesOnHand += hand->get(index)->getColour() + std::to_string(hand->get(index)->getShape()) + " ";
+            hand->get(index)->setTileColour(hand->get(index)->getColour());
+            tilesOnHand += hand->get(index)->getTileColour() + hand->get(index)->getColour() + std::to_string(hand->get(index)->getShape()) + " " + TWHITE;
         }
     }
     return tilesOnHand;

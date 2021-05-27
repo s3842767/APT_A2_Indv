@@ -17,7 +17,6 @@ GameEngine::GameEngine(std::string player1Name, std::string player2Name)
 
     for (int index =0; index < NO_PLAYERS; index++){
         for(int counter =0; counter < NO_TILES_IN_HAND; counter++){
-            std::cout << counter << std::endl;
             players[index]->addTileToHand((tilebag->getTile()));
         }
             
@@ -197,6 +196,16 @@ Player* GameEngine::getCurrentPlayer(){
 
 Player* GameEngine::getOtherPlayer(){
     return players[otherPlayer];
+}
+
+int GameEngine::getCurrentPlayerInt()
+{
+    return currentPlayer;
+}
+
+void GameEngine::setCurrentPlayerInt(int playerInt)
+{
+    currentPlayer = playerInt;
 }
 
 
