@@ -153,7 +153,6 @@ void gameSession(GameEngine* gameEngine)
          choice = parseCommand(gameEngine, command, round);
          if(choice != CHOICE_QUIT)
          {
-            printState(gameEngine);
             if(choice == CHOICE_HELP)
             {
                help(HELP_DEFAULT);
@@ -182,7 +181,6 @@ void gameSession(GameEngine* gameEngine)
             {
                if(ignore == false && gameEngine->getCurrentPlayerInt() == 0)
                {
-                  std::cout << "Changin players..." << std::endl;
                   gameEngine->setCurrentPlayerInt(1);
                   gameEngine->setOtherPlayerInt(0);
                   printState(gameEngine);
@@ -190,7 +188,6 @@ void gameSession(GameEngine* gameEngine)
                }
                if(ignore == false && gameEngine->getCurrentPlayerInt() == 1)
                {
-                  std::cout << "Changin players..." << std::endl;
                   gameEngine->setCurrentPlayerInt(0);
                   gameEngine->setOtherPlayerInt(1);
                   printState(gameEngine);
@@ -369,8 +366,9 @@ bool help(std::string choice)
                 << "The objective for qwirkle is to make lines of tiles with the same" << std::endl
                 << "shape or colour. At the start of the game, each player is given a hand of" << std::endl
                 << "6 random tiles that they can place on the board." << std::endl
-                << "Players must create lines with their tiles" << std::endl
-                << "'quit'" << std::endl
+                << "Players must create lines with their tiles with either the same color" << std::endl
+                << "or the same shape. A point is earned per each time placed. The Game is finished" << std::endl
+                << "once all the tiles in the tilebag and in hand are emptied and then the points are tallied." << std::endl
                 << std::endl;
                 return 0;
    }

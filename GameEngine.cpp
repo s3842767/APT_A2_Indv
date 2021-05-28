@@ -78,8 +78,6 @@ void GameEngine::convertStringPosToInt(std::string pos)
     // partial source: https://stackoverflow.com/questions/6383880/getting-stringstream-to-read-from-character-a-to-b-in-a-string
     x = std::stoi(pos.substr(xStart, xMaxEnd-xStart+1));
 
-    std::cout << "loc: " << x << std::endl;
-
     char c = pos.at(0); // converts letter to char, which is then assigned its corresponding int
     int alCount = 0;
     for(char i = 'A'; i <= 'Z'; i++)
@@ -106,8 +104,6 @@ bool GameEngine::isLegalPos(std::string tile, std::string location)
     const int xStart = 1;
     const int xMaxEnd = 2;
     tileShape = std::stoi(tile.substr(xStart, xMaxEnd-xStart+1));
-
-    std::cout << tileColour << tileShape << std::endl;
 
     convertStringPosToInt(location);
 
