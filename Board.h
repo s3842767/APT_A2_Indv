@@ -11,11 +11,6 @@
 
 class Board
 {
-    std::vector<std::vector<Tile*> > board;
-
-    // Column labels to be printed
-    std::string colLabels[6] = {"A ", "B ", "C ", "D ", "E ", "F "};
-    //int colLabelCount;
 
     public:
         // Creates the initial state of the board
@@ -28,6 +23,8 @@ class Board
         bool replaceTileOnBoard(Coordinate* coords, Tile* tile);
         bool removeTileOnBoard(Coordinate* coords);
         Tile* getTileAtPos(int row, int col);
+    private:
+        std::vector<std::vector<Tile*> > board;
 };
 
 #endif // ASSIGN2_BOARD_H

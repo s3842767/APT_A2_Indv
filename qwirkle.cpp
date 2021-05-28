@@ -3,6 +3,8 @@
 //  + Added Help command to gameplay
 //  + Fixed Invalid Input bug from group submission
 //  + Fixed segfault upon quit game from group submission
+//  + Added Colour to Tiles
+//  + Fixed and improved gameplay and endgame
 
 #include "LinkedList.h"
 #include "Tile.h"
@@ -23,7 +25,7 @@
 
 
 void newGame();
-void startGame(GameEngine* gameEngine);
+void gameSession(GameEngine* gameEngine);
 void printState(GameEngine* gameEngine);
 void printCredits();
 std::string getInput();
@@ -130,11 +132,11 @@ void newGame() {
     gameEngine = new GameEngine(player1Name, player2Name);
     std::cout << "Let's Play!" << std::endl;
 
-    startGame(gameEngine);
+    gameSession(gameEngine);
 }
 
 
-void startGame(GameEngine* gameEngine)
+void gameSession(GameEngine* gameEngine)
 {
    int round = 1;
    bool ignore = false;
@@ -149,50 +151,53 @@ void startGame(GameEngine* gameEngine)
          ignore = false;
          command = getInput();
          choice = parseCommand(gameEngine, command, round);
-         printState(gameEngine);
-         if(choice == CHOICE_HELP)
+         if(choice != CHOICE_QUIT)
          {
-            help("default");
-            choice = CHOICE_HELP;
-         }
-         if(choice == CHOICE_COMMAND)
-         {
-            help(HELP_COMMANDS);
-            choice = CHOICE_HELP;
-         }
-         if(choice == CHOICE_RULES)
-         {
-            help(HELP_RULES);
-            choice = CHOICE_HELP;
-         }
-
-         if(choice == CHOICE_PLACE)
-         {
-            gameEngine->getCurrentPlayer()->addPoint();
-         }
-         
-         if(gameEngine->isGameEnd())
-            choice = GAME_END;
-
-         if(choice == CHOICE_PLACE)
-         {
-            if(ignore == false && gameEngine->getCurrentPlayerInt() == 0)
+            printState(gameEngine);
+            if(choice == CHOICE_HELP)
             {
-               std::cout << "Changin players..." << std::endl;
-               gameEngine->setCurrentPlayerInt(1);
-               gameEngine->setOtherPlayerInt(0);
-               printState(gameEngine);
-               ignore = true;
+               help(HELP_DEFAULT);
+               choice = CHOICE_HELP;
             }
-            if(ignore == false && gameEngine->getCurrentPlayerInt() == 1)
+            if(choice == CHOICE_COMMAND)
             {
-               std::cout << "Changin players..." << std::endl;
-               gameEngine->setCurrentPlayerInt(0);
-               gameEngine->setOtherPlayerInt(1);
-               printState(gameEngine);
+               help(HELP_COMMANDS);
+               choice = CHOICE_HELP;
+            }
+            if(choice == CHOICE_RULES)
+            {
+               help(HELP_RULES);
+               choice = CHOICE_HELP;
+            }
+
+            if(choice == CHOICE_PLACE)
+            {
+               gameEngine->getCurrentPlayer()->addPoint();
+            }
+            
+            if(gameEngine->isGameEnd())
+               choice = GAME_END;
+
+            if(choice == CHOICE_PLACE)
+            {
+               if(ignore == false && gameEngine->getCurrentPlayerInt() == 0)
+               {
+                  std::cout << "Changin players..." << std::endl;
+                  gameEngine->setCurrentPlayerInt(1);
+                  gameEngine->setOtherPlayerInt(0);
+                  printState(gameEngine);
+                  ignore = true;
+               }
+               if(ignore == false && gameEngine->getCurrentPlayerInt() == 1)
+               {
+                  std::cout << "Changin players..." << std::endl;
+                  gameEngine->setCurrentPlayerInt(0);
+                  gameEngine->setOtherPlayerInt(1);
+                  printState(gameEngine);
+               }
+               round++;
             }
          }
-         round++;
       }
       while(choice == CHOICE_INVALID || choice == CHOICE_PLACE || choice == CHOICE_HELP);
       
@@ -215,6 +220,7 @@ void startGame(GameEngine* gameEngine)
 
    // Line below will only execute if choice == CHOICE_INVALID || GAME_END
    std::cout << "Goodbye" << std::endl;
+   std::cout << std::endl;
 }
 
 
@@ -291,7 +297,7 @@ int parseCommand(GameEngine* gameEngine, std::string command, int round)
             else
             {
                Tile* tile = gameEngine->getCurrentPlayer()->getTile(tiles);
-               
+
                if(tile == nullptr)
                {
                   returnVal = CHOICE_INVALID;
@@ -363,7 +369,7 @@ bool help(std::string choice)
                 << "The objective for qwirkle is to make lines of tiles with the same" << std::endl
                 << "shape or colour. At the start of the game, each player is given a hand of" << std::endl
                 << "6 random tiles that they can place on the board." << std::endl
-                << "To quit game:" << std::endl
+                << "Players must create lines with their tiles" << std::endl
                 << "'quit'" << std::endl
                 << std::endl;
                 return 0;
@@ -625,7 +631,7 @@ void loadGame(std::string filename){
 
       infile.close();
 
-      startGame(engine);
+      gameSession(engine);
 
       delete engine;
    }

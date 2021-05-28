@@ -15,6 +15,7 @@
 #define CHOICE_HELP 80
 #define GAME_END 1001
 
+#define HELP_DEFAULT    "default"
 #define HELP_RULES      "rules"
 #define HELP_COMMANDS   "commands"
 
