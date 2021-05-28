@@ -75,6 +75,6 @@ bool Board::removeTileOnBoard(Coordinate* coords)
     return false;
 }
 
-Tile* Board::getTileAtPos(char row, int col){
+Tile* Board::getTileAtPos(int row, int col){
    return board[row][col];
 }

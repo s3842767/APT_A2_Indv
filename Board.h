@@ -27,7 +27,7 @@ class Board
         bool addTileToBoard(Coordinate* coords, Tile* tile);
         bool replaceTileOnBoard(Coordinate* coords, Tile* tile);
         bool removeTileOnBoard(Coordinate* coords);
-        Tile* getTileAtPos(char row, int col);
+        Tile* getTileAtPos(int row, int col);
 };
 
 #endif // ASSIGN2_BOARD_H

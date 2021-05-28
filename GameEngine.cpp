@@ -10,6 +10,9 @@ GameEngine::GameEngine(std::string player1Name, std::string player2Name)
     this->currentPlayer = PLAYER1;
     this->otherPlayer = PLAYER2;
 
+    this->players[PLAYER1]->setScore(0);
+    this->players[PLAYER2]->setScore(0);
+
     tilebag->shuffle();
 
     this->players[PLAYER1]->setHand(new LinkedList());
@@ -51,17 +54,14 @@ GameEngine::~GameEngine(){
 void GameEngine::place(Player& player, Tile* tile, std::string pos)
 {
     convertStringPosToInt(pos);
-    if(pos.size() == 2)
+
+    Coordinate* coords = new Coordinate(y, x);
+    bool chkCond = board->addTileToBoard(coords, tile);
+    if(chkCond == false)
     {
-        Coordinate* coords = new Coordinate(y, x);
-        bool chkCond = board->addTileToBoard(coords, tile);
-        if(chkCond == false)
-        {
-            std::cout << "Coordinate already Occupied" << std::endl;
-        }
-        delete coords;
+        std::cout << "Coordinate already Occupied" << std::endl;
     }
-    
+    delete coords;
 }
 
 void GameEngine::convertStringPosToInt(std::string pos)
@@ -77,6 +77,8 @@ void GameEngine::convertStringPosToInt(std::string pos)
     // convert substring to integer, 
     // partial source: https://stackoverflow.com/questions/6383880/getting-stringstream-to-read-from-character-a-to-b-in-a-string
     x = std::stoi(pos.substr(xStart, xMaxEnd-xStart+1));
+
+    std::cout << "loc: " << x << std::endl;
 
     char c = pos.at(0); // converts letter to char, which is then assigned its corresponding int
     int alCount = 0;
@@ -95,49 +97,60 @@ bool GameEngine::isLegalPos(std::string tile, std::string location)
 {   
     bool isLegal = true;   
     
-    char row = location.at(FIRST_CHAR);
-    int col = std::stoi(location.substr(SECOND_CHAR, location.length()));
+    // char row = location.at(FIRST_CHAR);
+    // int col = std::stoi(location.substr(SECOND_CHAR, location.length()));
 
-    char tileColour= tile.at(FIRST_CHAR) - 0;
-    int tileShape = tile.at(SECOND_CHAR)-0;
+    char tileColour= tile.at(FIRST_CHAR);
+    int tileShape = 0;
 
+    const int xStart = 1;
+    const int xMaxEnd = 2;
+    tileShape = std::stoi(tile.substr(xStart, xMaxEnd-xStart+1));
 
-    if(board->getTileAtPos(row, col) != nullptr || location.length() != 2 || location.length() != 3){
-        isLegal = false;
+    std::cout << tileColour << tileShape << std::endl;
+
+    convertStringPosToInt(location);
+
+    if(board->getTileAtPos(y, x) != nullptr){
+        return false;
     }
 
 
-
+    if((board->getTileAtPos(y - 1, x) == nullptr) && (board->getTileAtPos(y + 1, x) == nullptr) &&
+    (board->getTileAtPos(y, x - 1) == nullptr) && (board->getTileAtPos(y, x + 1) == nullptr))
+    {
+        return false;
+    }
     
     //checks tile above has at least one similar element and is not the same
-    if (board->getTileAtPos(row -1, col) != nullptr){
-        if ((board->getTileAtPos(row - 1, col)->getColour() != tileColour && board->getTileAtPos(row - 1, col)->getShape() != tileShape) || 
-        (board->getTileAtPos(row - 1, col)->getColour() == tileColour && board->getTileAtPos(row -1, col)->getShape() == tileShape)){
-            isLegal = false; 
+    if (board->getTileAtPos(y - 1, x) != nullptr){
+        if ((board->getTileAtPos(y - 1, x)->getColour() != tileColour && board->getTileAtPos(y - 1, x)->getShape() != tileShape) || 
+        (board->getTileAtPos(y - 1, x)->getColour() == tileColour && board->getTileAtPos(y - 1, x)->getShape() == tileShape)){
+            return false; 
         }   
     }
 
      //checks tile underneath has at least one similar element and is not the same
-    if (board->getTileAtPos(row + 1, col) != nullptr){
-        if ((board->getTileAtPos(row + 1, col)->getColour() != tileColour && board->getTileAtPos(row + 1, col)->getShape() != tileShape) || 
-        (board->getTileAtPos(row + 1, col)->getColour() == tileColour && board->getTileAtPos(row + 1, col)->getShape() == tileShape)){
-            isLegal = false; 
+    if (board->getTileAtPos(y + 1, x) != nullptr){
+        if ((board->getTileAtPos(y + 1, x)->getColour() != tileColour && board->getTileAtPos(y + 1, x)->getShape() != tileShape) || 
+            (board->getTileAtPos(y + 1, x)->getColour() == tileColour && board->getTileAtPos(y + 1, x)->getShape() == tileShape)){
+            return false; 
         }   
     }
 
     //checks tile to the left has at least one similar element and is not the same
-    if (board->getTileAtPos(row, col - 1) != nullptr){
-        if ((board->getTileAtPos(row, col - 1)->getColour() != tileColour && board->getTileAtPos(row, col -1)->getShape() != tileShape) || 
-        (board->getTileAtPos(row, col -1)->getColour() == tileColour && board->getTileAtPos(row, col -1)->getShape() == tileShape)){
-            isLegal = false; 
+    if (board->getTileAtPos(y, x - 1) != nullptr){
+        if ((board->getTileAtPos(y, x - 1)->getColour() != tileColour && board->getTileAtPos(y, x -1)->getShape() != tileShape) || 
+        (board->getTileAtPos(y, x -1)->getColour() == tileColour && board->getTileAtPos(y, x -1)->getShape() == tileShape)){
+            return false; 
         }   
     }
 
     //checks tile to the right has at least one similar element and is not the same
-    if (board->getTileAtPos(row, col + 1) != nullptr){
-        if ((board->getTileAtPos(row, col + 1)->getColour() != tileColour && board->getTileAtPos(row, col + 1)->getShape() != tileShape) || 
-        (board->getTileAtPos(row, col + 1)->getColour() == tileColour && board->getTileAtPos(row, col + 1)->getShape() == tileShape)){
-            isLegal = false; 
+    if (board->getTileAtPos(y, x + 1) != nullptr){
+        if ((board->getTileAtPos(y, x + 1)->getColour() != tileColour && board->getTileAtPos(y, x + 1)->getShape() != tileShape) || 
+        (board->getTileAtPos(y, x + 1)->getColour() == tileColour && board->getTileAtPos(y, x + 1)->getShape() == tileShape)){
+            return false; 
         }   
     }
 
@@ -206,6 +219,11 @@ int GameEngine::getCurrentPlayerInt()
 void GameEngine::setCurrentPlayerInt(int playerInt)
 {
     currentPlayer = playerInt;
+}
+
+void GameEngine::setOtherPlayerInt(int playerInt)
+{
+    otherPlayer = playerInt;
 }
 
 

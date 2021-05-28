@@ -59,7 +59,7 @@ Tile* Player::getTile(std::string tileString)
             return t;
         }
     }
-    std::cout<< "PLAYER::GET_TILE() - TILE NOT FOUND"<<std::endl;
+    std::cout<< "Tile not found!"<<std::endl;
     return t;
 }
 
@@ -77,6 +77,11 @@ int Player::getScore() {
 
 void Player::setScore(int score) {
     this->score = score;
+}
+
+void Player::addPoint()
+{
+    this->score++;
 }
 
 LinkedList* Player::getHand() {

@@ -25,7 +25,7 @@ void Tile::setShape(Shape shape){
 
 void Tile::setTileColour(char c)
 {
-    tileColour = TRED;
+    tileColour = TWHITE;
     if(c == RED)
     {
         tileColour = TRED;
@@ -33,6 +33,10 @@ void Tile::setTileColour(char c)
     if(c == ORANGE)
     {
         tileColour = TORANGE;
+    }
+    if(c == GREEN)
+    {
+        tileColour = TGREEN;
     }
     if(c == YELLOW)
     {

@@ -39,7 +39,7 @@ std::istream& safeGetline(std::istream& is, std::string& t);
 
 
 // Returns int base on the choice player made
-int parseCommand(GameEngine* gameEngine, std::string command);
+int parseCommand(GameEngine* gameEngine, std::string command, int round);
 
 GameEngine *gameEngine;
 
@@ -136,6 +136,8 @@ void newGame() {
 
 void startGame(GameEngine* gameEngine)
 {
+   int round = 1;
+   bool ignore = false;
    int choice = CHOICE_INVALID;
    std::string command = "";
    printState(gameEngine);
@@ -144,39 +146,55 @@ void startGame(GameEngine* gameEngine)
    {
       do
       {
+         ignore = false;
          command = getInput();
-         choice = parseCommand(gameEngine, command);
+         choice = parseCommand(gameEngine, command, round);
          printState(gameEngine);
          if(choice == CHOICE_HELP)
          {
             help("default");
-            choice = CHOICE_PLACE;
+            choice = CHOICE_HELP;
          }
          if(choice == CHOICE_COMMAND)
          {
             help(HELP_COMMANDS);
-            choice = CHOICE_PLACE;
+            choice = CHOICE_HELP;
          }
          if(choice == CHOICE_RULES)
          {
             help(HELP_RULES);
-            choice = CHOICE_PLACE;
+            choice = CHOICE_HELP;
          }
-         if(gameEngine->isGameEnd())
-            choice = GAME_END;
+
          if(choice == CHOICE_PLACE)
          {
-            if(gameEngine->getCurrentPlayerInt() == 0)
+            gameEngine->getCurrentPlayer()->addPoint();
+         }
+         
+         if(gameEngine->isGameEnd())
+            choice = GAME_END;
+
+         if(choice == CHOICE_PLACE)
+         {
+            if(ignore == false && gameEngine->getCurrentPlayerInt() == 0)
             {
+               std::cout << "Changin players..." << std::endl;
                gameEngine->setCurrentPlayerInt(1);
+               gameEngine->setOtherPlayerInt(0);
+               printState(gameEngine);
+               ignore = true;
             }
-            if(gameEngine->getCurrentPlayerInt() == 1)
+            if(ignore == false && gameEngine->getCurrentPlayerInt() == 1)
             {
+               std::cout << "Changin players..." << std::endl;
                gameEngine->setCurrentPlayerInt(0);
+               gameEngine->setOtherPlayerInt(1);
+               printState(gameEngine);
             }
          }
+         round++;
       }
-      while(choice == CHOICE_INVALID || choice == CHOICE_PLACE);
+      while(choice == CHOICE_INVALID || choice == CHOICE_PLACE || choice == CHOICE_HELP);
       
       if(choice != CHOICE_QUIT && choice != GAME_END)
       {
@@ -213,7 +231,7 @@ void printState(GameEngine* gameEngine)
    std::cout << std::endl;
 }
 
-int parseCommand(GameEngine* gameEngine, std::string command)
+int parseCommand(GameEngine* gameEngine, std::string command, int round)
 {
 
    int returnVal = CHOICE_INVALID;
@@ -263,12 +281,37 @@ int parseCommand(GameEngine* gameEngine, std::string command)
       {
          wordIter++;
          std::string location = commands[wordIter];
-         
-         Tile* tile = gameEngine->getCurrentPlayer()->getTile(tiles);
+         if(round > 1)
+         {
+            if(!gameEngine->isLegalPos(tiles, location))
+            {
+               std::cout << "Not a Legal Position!" << std::endl;
+               returnVal = CHOICE_INVALID;
+            }
+            else
+            {
+               Tile* tile = gameEngine->getCurrentPlayer()->getTile(tiles);
+               
+               if(tile == nullptr)
+               {
+                  returnVal = CHOICE_INVALID;
+               }
+               if(tile != nullptr)
+               {
+                  gameEngine->place(*(gameEngine->getCurrentPlayer()), tile, location);
+                  gameEngine->replaceTileOnHand();
+                  returnVal = CHOICE_PLACE;
+               }
+            }
+         }
+         if(round == 1)
+         {
+            Tile* tile = gameEngine->getCurrentPlayer()->getTile(tiles);
 
-         gameEngine->place(*(gameEngine->getCurrentPlayer()), tile, location);
-         gameEngine->replaceTileOnHand();
-         returnVal = CHOICE_PLACE;
+            gameEngine->place(*(gameEngine->getCurrentPlayer()), tile, location);
+            gameEngine->replaceTileOnHand();
+            returnVal = CHOICE_PLACE;
+         }
       }
       
    }

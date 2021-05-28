@@ -40,8 +40,10 @@ public:
     Player* getPlayer(int player);
     Player* getCurrentPlayer();
     Player* getOtherPlayer();
+    int getOtherPlayerInt();
     int getCurrentPlayerInt();
     void setCurrentPlayerInt(int playerInt);
+    void setOtherPlayerInt(int playerInt);
     void setCurrentPlayer(int nextPlayer);
     bool isGameEnd() const;
     void printEndResult();

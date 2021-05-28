@@ -21,6 +21,7 @@ public:
 
     int getScore();
     void setScore(int score);
+    void addPoint();
 
     LinkedList* getHand();
     void setHand(LinkedList* LinkedList);
