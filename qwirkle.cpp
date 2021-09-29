@@ -2,7 +2,7 @@
 // Enhancements Implemented:
 //  + Added Help command to gameplay
 //  + Fixed Invalid Input bug from group submission
-//  + Fixed segfault upon quit game from group submission
+//  + Fixed bug upon quit game from group submission
 //  + Added Colour to Tiles
 //  + Fixed and improved gameplay and endgame
 

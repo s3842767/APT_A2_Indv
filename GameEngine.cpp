@@ -9,12 +9,9 @@ GameEngine::GameEngine(std::string player1Name, std::string player2Name)
     this->players[PLAYER2] = new Player(player2Name);
     this->currentPlayer = PLAYER1;
     this->otherPlayer = PLAYER2;
-
     this->players[PLAYER1]->setScore(0);
     this->players[PLAYER2]->setScore(0);
-
     tilebag->shuffle();
-
     this->players[PLAYER1]->setHand(new LinkedList());
     this->players[PLAYER2]->setHand(new LinkedList());
 
@@ -22,17 +19,11 @@ GameEngine::GameEngine(std::string player1Name, std::string player2Name)
         for(int counter =0; counter < NO_TILES_IN_HAND; counter++){
             players[index]->addTileToHand((tilebag->getTile()));
         }
-            
     }
     for (int i = 0; i < NO_PLAYERS; i++){
         std::cout << players[i]->printTilesOnHand() << std::endl;
     }
-
-    
     board->printBoard();
-
-  
-
 }
 
 GameEngine::GameEngine(Player* player1, Player* player2, Board* board, Tilebag* bag)
@@ -64,11 +55,8 @@ void GameEngine::place(Player& player, Tile* tile, std::string pos)
     delete coords;
 }
 
-void GameEngine::convertStringPosToInt(std::string pos)
+bool GameEngine::convertStringPosToInt(std::string pos)
 {
-    // std::stringstream lc;
-    // lc << pos[1];
-    // lc >> x; // converts number to int
 
     // starting and maximum character position for x
     const int xStart = 1;
@@ -76,8 +64,12 @@ void GameEngine::convertStringPosToInt(std::string pos)
 
     // convert substring to integer, 
     // partial source: https://stackoverflow.com/questions/6383880/getting-stringstream-to-read-from-character-a-to-b-in-a-string
-    x = std::stoi(pos.substr(xStart, xMaxEnd-xStart+1));
-
+    try{
+        x = std::stoi(pos.substr(xStart, xMaxEnd-xStart+1));
+    }
+    catch(std::exception& e){
+        return false;
+    }
     char c = pos.at(0); // converts letter to char, which is then assigned its corresponding int
     int alCount = 0;
     for(char i = 'A'; i <= 'Z'; i++)
@@ -88,25 +80,30 @@ void GameEngine::convertStringPosToInt(std::string pos)
         }
         alCount++;
     }
-    
+    return true;
 }
 
 bool GameEngine::isLegalPos(std::string tile, std::string location)
 {   
     bool isLegal = true;   
     
-    // char row = location.at(FIRST_CHAR);
-    // int col = std::stoi(location.substr(SECOND_CHAR, location.length()));
+    if(tile.size() > 2 || location.size() > 2){
+        return false;
+    }
 
     char tileColour= tile.at(FIRST_CHAR);
     int tileShape = 0;
 
     const int xStart = 1;
     const int xMaxEnd = 2;
-    tileShape = std::stoi(tile.substr(xStart, xMaxEnd-xStart+1));
+    try{
+        tileShape = std::stoi(tile.substr(xStart, xMaxEnd-xStart+1));
 
-    convertStringPosToInt(location);
-
+        convertStringPosToInt(location);
+    }
+    catch(std::exception& e){
+        return false;
+    }
     if(board->getTileAtPos(y, x) != nullptr){
         return false;
     }
@@ -207,18 +204,15 @@ Player* GameEngine::getOtherPlayer(){
     return players[otherPlayer];
 }
 
-int GameEngine::getCurrentPlayerInt()
-{
+int GameEngine::getCurrentPlayerInt(){
     return currentPlayer;
 }
 
-void GameEngine::setCurrentPlayerInt(int playerInt)
-{
+void GameEngine::setCurrentPlayerInt(int playerInt){
     currentPlayer = playerInt;
 }
 
-void GameEngine::setOtherPlayerInt(int playerInt)
-{
+void GameEngine::setOtherPlayerInt(int playerInt){
     otherPlayer = playerInt;
 }
 
@@ -229,13 +223,9 @@ void GameEngine::setCurrentPlayer(int nextPlayer){
 }
 
 void GameEngine::loadGame(std::string filename){
-
-
     std::ifstream file; 
     file.open(filename);
-
     std::string line;
-
     if (file){
         while(getline(file, line)){
             players[PLAYER1]->setName(line);
@@ -243,9 +233,7 @@ void GameEngine::loadGame(std::string filename){
 
         }
     }
-
     file.close();
-
 }
 
 void GameEngine::saveGame(std::string filename) {
@@ -253,27 +241,19 @@ void GameEngine::saveGame(std::string filename) {
     std::ofstream file;
     file.open(filename);
     std::string output= "";
-    
     for (unsigned int index = 0; index < (sizeof(players)/sizeof(*players)); index++){
         file << players[index]->getName() << "\n" << players[index]->getScore() << "\n";
         for (unsigned int counter = 0; counter< players[index]->getHand()->getSize(); counter++){
             file << players[index]->getHand()->get(counter)->getColour() << players[index]->getHand()->get(counter)->getShape();
         }
     }
-
     //writes in dimensions of board: width,height 
     file << SIZE_ROW << "," << SIZE_COL << std::endl;
-
     //lists all tiles in tilebag
     for (unsigned int index = 0; index < tilebag->getSize(); index++){
         file << tilebag->get(index)->getColour() << tilebag->get(index)->getShape();
     }
-  
-  
     file << players[currentPlayer]->getName();
-
     file.close();
-
-
 }
 

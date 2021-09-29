@@ -76,5 +76,10 @@ bool Board::removeTileOnBoard(Coordinate* coords)
 }
 
 Tile* Board::getTileAtPos(int row, int col){
-   return board[row][col];
+    if(row < 0 || col < 0){
+        return nullptr;
+    }
+    else{
+        return board[row][col];
+    }
 }

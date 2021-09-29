@@ -153,41 +153,12 @@ void LinkedList::remove(unsigned int i)
         // size by one in its own implementation
         size--;
     }
-    
-
     return;
 }
 
 
 
 void LinkedList::addFront(Tile* data){
-
-     
-
-    // what's head currently pointing at?
-
-    // Node *temp = this->head;
-
-     
-
-    // ok, lets make a new node that also points at
-
-    // whatever head is pointing at...
-
-    // Node *n = new Node(data, temp);
-
-     
-
-    // now make head point at the brand new node.
-
-    // this->head = n;
-
-     
-
-    // or write it like this...
-
-    // since we're adding to the front, then previous node would always be
-    // a nullptr
     head = new Node(data, head, nullptr);
 
     // if size is 0, then tail is nullptr, thus tail should have the
@@ -199,19 +170,12 @@ void LinkedList::addFront(Tile* data){
     // Note that if head is currently nullptr (i.e. size = 0), then the "next" attribute
     // for the new Node would be nullptr, which is the intended behaviour as the "next"
     // attribute for the last Node object should be a nullptr.
-
     size++;
-
 }
 
 
 
 void LinkedList::addBack(Tile* data) {
-
-    // two possible conditions
-
-    
-
     if (head == nullptr) 
     {
         // list is empty => we need to modify the LinkedList object
@@ -220,25 +184,15 @@ void LinkedList::addBack(Tile* data) {
     } 
     else 
     {
-
         // list is not empty => we need to modify the last Node element.
-  
         Node * upto = this->head;
  
         while (upto->next != nullptr) 
         {
-
             upto = upto->next;
-
-
         }
-       
         upto->next = new Node(data, nullptr, upto);
-
         this->tail = upto->next;
-
     }
-
     size++;
-
 }

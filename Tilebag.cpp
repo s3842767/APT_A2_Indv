@@ -11,7 +11,6 @@ Tilebag::Tilebag(){
         for (int index = 0; index < COLOURS_SIZE; index++){
             for (int counter = 0; counter< SHAPES_SIZE; counter++){
                 Tile *tile = new Tile(colours[index], shapes[counter]);
-                //tile->setTileColour();
                 allTiles->addFront(tile);
             }
         }

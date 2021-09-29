@@ -16,8 +16,3 @@ public:
 };
 
 #endif // ASSIGN2_NODE_H
-
-// TODO: variables to private
-// TODO: getters adn setter
-// TODO: destructor
-// TODO: error handling for copy constructor

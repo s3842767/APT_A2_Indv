@@ -50,7 +50,7 @@ public:
     
 private:
     int x, y;
-    void convertStringPosToInt(std::string pos);
+    bool convertStringPosToInt(std::string pos);
     Tilebag *tilebag = new Tilebag();
     Board *board = new Board();
     Player *players[NO_PLAYERS];

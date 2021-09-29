@@ -29,6 +29,7 @@
 #define FIRST_CHAR          0
 #define SECOND_CHAR         1
 
+// T(ile) + Colour
 #define TRED    "\u001b[31m"
 #define TORANGE "\u001b[33m"
 #define TYELLOW "\u001b[33;1m"

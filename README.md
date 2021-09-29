@@ -1,10 +1,2 @@
-# APT_A2
+# APT_A2_Indv
 Repository for Advanced Programming Techniques Assignment 2
-## Testing
-
-
-```bash
-./qwirkle < <testname>.input > <testname>.gameout
-diff -w <testname>.output <testname>.gameout
-if [-e <testname>.expsave] diff -w -y <testname>.expsave <actual_gamesave>
-```
